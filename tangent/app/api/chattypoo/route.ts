@@ -1,6 +1,6 @@
 // app/api/chattypoo/route.ts
 
-import { NextRequest, NextResponse} from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { TangentData } from "@/data/tangent";
 const openai = new OpenAI({
@@ -9,7 +9,7 @@ const openai = new OpenAI({
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
+    const {messages} = await req.json();
     const functions = [
       {
         name: "generate_tangents",
@@ -17,25 +17,25 @@ export async function POST(req: NextRequest) {
         parameters: {
           type: "object",
           properties: {
-            title:       { type: "string" },
-            date:        { type: "string", format: "date" },
-            time:        { type: "number", description: "Estimated time in minutes" },
-            description: { type: "string" },
+            description: {
+              type: "string",
+              description: "A summary of the three tangents",
+            },
             tangent: {
               type: "array",
               items: {
                 type: "object",
                 properties: {
-                  title:   { type: "string" },
-                  content: { type: "string" }
+                  title: { type: "string" },
+                  content: { type: "string" },
                 },
-                required: ["title", "content"]
-              }
-            }
+                required: ["title", "content"],
+              },
+            },
           },
-          required: ["title", "date", "time", "description", "tangent"]
-        }
-      }
+          required: ["description", "tangent"],
+        },
+      },
     ];
 
     // Optionally tweak the last message to include instructions
@@ -48,23 +48,26 @@ export async function POST(req: NextRequest) {
             You are a historian-agent. Given the student’s content, 
             generate exactly three “tangents” with cause-and-effect reasoning 
             and a unifying conclusion. Return ONLY the output of the generate_tangents function.
-          `
+          `,
         },
-        ...messages
+        ...messages,
       ],
       temperature: 0.7,
-      functions:functions,
+      functions: functions,
       function_call: {
-        name: "generate_tangents"},
+        name: "generate_tangents",
+      },
       max_tokens: 500,
     });
 
     const call = response.choices[0].message.function_call!;
-    // parse and type as TangentData
-    const data: TangentData = JSON.parse(call.arguments!);
 
-    return NextResponse.json(data, { status: 200 });
-
+    const payload = JSON.parse(call.arguments!);
+    const fullTangent: TangentData = {
+      description: payload.description,
+      tangent: payload.tangent,
+    };
+    return NextResponse.json(fullTangent);
   } catch (err: any) {
     console.error("Error in /chattypoo:", err);
     return NextResponse.json(
