@@ -19,8 +19,11 @@ import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { TangentDataSchema, TangentData } from "@/data/tangent";
+type AddTangentProps = {
+  id: string;
+};
 
-export default function AddTangent() {
+export default function AddTangent({id}: AddTangentProps){
   const [title, setTitle] = useState("");
   const [expand, setExpand] = useState(false);
   const [instructions, setInstructions] = useState(false);
@@ -94,6 +97,7 @@ export default function AddTangent() {
         date:today,
         time: time,
         data: tangentJson,
+        userId: id
       });
       
 
