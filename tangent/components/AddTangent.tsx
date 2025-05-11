@@ -21,9 +21,15 @@ import { Button } from "./ui/button";
 import { TangentDataSchema, TangentData } from "@/data/tangent";
 type AddTangentProps = {
   id: string;
+  deployed: boolean;
+  setDeployed: (deployed: boolean) => void;
 };
 
-export default function AddTangent({id}: AddTangentProps){
+export default function AddTangent({
+  id,
+  deployed,
+  setDeployed,
+}: AddTangentProps) {
   const [title, setTitle] = useState("");
   const [expand, setExpand] = useState(false);
   const [instructions, setInstructions] = useState(false);
@@ -67,13 +73,19 @@ export default function AddTangent({id}: AddTangentProps){
       const time = `${hh}:${mm}:${ss}`;
 
       // 4) Call your chattypoo route
-      const aiRes = await fetch("/api/chattypoo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [{ role: "user", content: text }],
-        }),
-      });
+      let aiRes: Response;
+      try {
+        aiRes = await fetch("/api/chattypoo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: [{ role: "user", content: text }] }),
+        });
+      } catch (networkErr) {
+        console.error("Network error calling AI:", networkErr);
+        setError("Network error – please check your connection and try again.");
+        setLoading(false);
+        return;
+      }
 
       // Stream the response
       const reader = aiRes.body!.getReader();
@@ -84,27 +96,34 @@ export default function AddTangent({id}: AddTangentProps){
         if (done) break;
         fullMessage += decoder.decode(value, { stream: true });
       }
+      console.log("Fatty:", fullMessage);
 
       // setResponse(fullMessage);
 
       // 5) Parse the JSON and save to Firestore
-      const tangentJson: TangentData = TangentDataSchema.parse(
-        JSON.parse(fullMessage)
-      );
-
-      await addDoc(collection(db, "tangents"), {
-        title: title.trim(),
-        date:today,
-        time: time,
-        data: tangentJson,
-        userId: id
-      });
-      
+      try{
+        const tangentJson: TangentData = TangentDataSchema.parse(
+          JSON.parse(fullMessage)
+        );
+        await addDoc(collection(db, "tangents"), {
+          title: title.trim(),
+          date: today,
+          time: time,
+          data: tangentJson,
+          userId: id,
+        });
+      }catch(err){
+        console.error("Parsing error:", err);
+        setError("Token Limit reached. Please try again with a smaller PD.F");
+        setLoading(false);
+        return;
+      }
 
       // 6) Reset form
       setTitle("");
       setFile(null);
       setExpand(false);
+      setDeployed(true);
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Something went wrong.");

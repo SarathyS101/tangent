@@ -25,6 +25,7 @@ type TangentRecord = {
 export default function TangentList() {
   const [tangents, setTangents] = useState<TangentRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deployed, setDeployed] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [uid, setUid] = useState<string | null>(null);
   useEffect(() => {
@@ -62,12 +63,12 @@ export default function TangentList() {
     }
 
     fetchTangents();
-
+    setDeployed(false);
     // cleanup in case component unmounts early
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [deployed]);
 
   if (loading) return <p>Loading tangents…</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -75,7 +76,7 @@ export default function TangentList() {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
-      {uid!=null && <AddTangent id={uid} />}
+      {uid!=null && <AddTangent id={uid} deployed={deployed} setDeployed={setDeployed} />}
       {tangents.map(({ id, title, date, time, data }) => (
         <Tangent key={id} title={title} date={date} time={time} data={data} />
       ))}

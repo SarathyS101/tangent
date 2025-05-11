@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
           properties: {
             description: {
               type: "string",
-              description: "A summary of the three tangents",
+              description: "A short one-sentence description of the tangents, or 250-character max description of the content.",
             },
             tangent: {
               type: "array",
@@ -47,7 +47,9 @@ export async function POST(req: NextRequest) {
           content: `
             You are a historian-agent. Given the student’s content, 
             generate exactly three “tangents” with cause-and-effect reasoning 
-            and a unifying conclusion. Return ONLY the output of the generate_tangents function.
+            and a unifying conclusion. Essentially you are tasked with creating the first tangent from the content,
+            and then drawing two more tangents from the first tangent either using the content or your own external knowledge.
+            Return ONLY the output of the generate_tangents function.
           `,
         },
         ...messages,

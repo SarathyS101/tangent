@@ -11,10 +11,10 @@ async function downloadAndParsePdf(url: string): Promise<{ text: string }> {
   const arrayBuffer = await res.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  console.log("🧠 Parsing PDF...");
+  //console.log("🧠 Parsing PDF...");
   const data = await pdfParse(buffer);
-  console.log("✅ Parsed pages:", data.numpages);
-
+  // console.log("✅ Parsed pages:", data.numpages);
+  // console.log("✅ Parsed text length:", data.text);
   return { text: data.text };
 }
 

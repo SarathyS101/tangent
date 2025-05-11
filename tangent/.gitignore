@@ -18,7 +18,9 @@
 /out/
 
 # utils
-/utils
+/utils/*
+
+
 # production
 /build
 
