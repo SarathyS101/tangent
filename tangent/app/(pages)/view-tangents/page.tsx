@@ -6,6 +6,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import  auth  from "@/utils/authorization";
 import { useRouter } from "next/navigation";
 import TangentList from "@/components/TangentList";
+import Navbar from "@/components/Navbar";
 
 export default function ViewTangentsPage() {
   const [loading, setLoading] = useState(true);
@@ -29,14 +30,7 @@ export default function ViewTangentsPage() {
 
   return (
     <div className="p-4">
-      <button
-        onClick={() => {
-          signOut(auth).then(() => router.replace("/"));
-        }}
-        className="mb-4 px-3 py-1 bg-gray-200 rounded"
-      >
-        Sign Out
-      </button>
+      <Navbar />
       <TangentList />
     </div>
   );
