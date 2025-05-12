@@ -54,15 +54,59 @@ export default function AddTangent({
     setLoading(true);
 
     try {
-      // 2) Upload PDF to Firebase Storage
-      const fileRef = ref(storage, `tangents/${file.name}`);
-      const snapshot = await uploadBytes(fileRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
+      // // 2) Upload PDF to Firebase Storage
+      // const fileRef = ref(storage, `tangents/${file.name}`);
+      // const snapshot = await uploadBytes(fileRef, file);
+      // const downloadURL = await getDownloadURL(snapshot.ref);
+      console.log("🔗 Requesting signed URL...");
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fileName: file.name }),
+      });
+      const data = await res.json();
+      console.log("📝 API response body:", data);
+
+      if (!data.success) throw new Error(data.error);
+
+      const uploadURL = data.signedUrl;
+      const s3Key = data.key;
+
+      // Upload the file to S3
+      console.log("📤 Uploading to S3...");
+      const uploadRes = await fetch(uploadURL, {
+        method: "PUT",
+        body: file,
+        headers: {
+          "Content-Type": file.type,
+        },
+      });
+
+      console.log("🚀 Upload response status:", uploadRes.status);
+
+      if (!uploadRes.ok) {
+        console.error("💥 S3 Upload failed", uploadRes);
+        throw new Error("Failed to upload to S3");
+      }
+
+      // Call the parsepdf endpoint
+      console.log("🔎 Requesting PDF parsing...");
+      const parseRes = await fetch(
+        `/api/parsepdf?key=${encodeURIComponent(s3Key)}`
+      );
+      // const parseData = await parseRes.json();
+
+      // console.log("📊 Parsing response:", parseData);
+
+      // if (!parseData.success) throw new Error(parseData.error);
+
 
       // 3) Parse PDF on your backend
-      const parseRes = await fetch(
-        `/api/parsepdf?url=${encodeURIComponent(downloadURL)}`
-      );
+      // const parseRes = await fetch(
+      //   `/api/parsepdf?url=${encodeURIComponent(downloadURL)}`
+      // );
 
       const { text } = await parseRes.json();
       const d = new Date();
@@ -101,7 +145,7 @@ export default function AddTangent({
       // setResponse(fullMessage);
 
       // 5) Parse the JSON and save to Firestore
-      try{
+      try {
         const tangentJson: TangentData = TangentDataSchema.parse(
           JSON.parse(fullMessage)
         );
@@ -112,7 +156,7 @@ export default function AddTangent({
           data: tangentJson,
           userId: id,
         });
-      }catch(err){
+      } catch (err) {
         console.error("Parsing error:", err);
         setError("Token Limit reached. Please try again with a smaller PD.F");
         setLoading(false);
