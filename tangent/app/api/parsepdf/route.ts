@@ -81,6 +81,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSignedUrlForPDF } from "@/lib/s3";
 import axios from "axios";
 import pdf from "pdf-parse";
+import { url } from "inspector";
 
 export async function GET(req: NextRequest) {
     console.log("⏱️ Received request to /api/parsepdf");
@@ -111,7 +112,7 @@ export async function GET(req: NextRequest) {
         const data = await pdf(response.data);
         console.log("📝 Parsed PDF text:", data.text);
 
-        return NextResponse.json({ success: true, text: data.text });
+        return NextResponse.json({ success: true, text: data.text, url: downloadUrl }, { status: 200 });
     } catch (error) {
         console.error("💥 Error in /api/parsepdf:", error);
         return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });

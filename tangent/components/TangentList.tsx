@@ -19,6 +19,7 @@ type TangentRecord = {
   title: string;
   date: string;
   time: string;
+  url: string;
   data: TangentData;
 };
 
@@ -49,6 +50,7 @@ export default function TangentList() {
             title: raw.title,
             date: raw.date,
             time: raw.time,
+            url: raw.url,
             data: raw.data,
           };
         });
@@ -77,8 +79,8 @@ export default function TangentList() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
       {uid!=null && <AddTangent id={uid} deployed={deployed} setDeployed={setDeployed} />}
-      {tangents.map(({ id, title, date, time, data }) => (
-        <Tangent key={id} title={title} date={date} time={time} data={data} />
+      {tangents.map(({ id, title, date, time, url, data }) => (
+        <Tangent key={id} url ={url} title={title} date={date} time={time} data={data} />
       ))}
     </div>
   );

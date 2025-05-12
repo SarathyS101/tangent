@@ -54,10 +54,7 @@ export default function AddTangent({
     setLoading(true);
 
     try {
-      // // 2) Upload PDF to Firebase Storage
-      // const fileRef = ref(storage, `tangents/${file.name}`);
-      // const snapshot = await uploadBytes(fileRef, file);
-      // const downloadURL = await getDownloadURL(snapshot.ref);
+
       console.log("🔗 Requesting signed URL...");
       const res = await fetch("/api/upload", {
         method: "POST",
@@ -108,7 +105,7 @@ export default function AddTangent({
       //   `/api/parsepdf?url=${encodeURIComponent(downloadURL)}`
       // );
 
-      const { text } = await parseRes.json();
+      const { text, url } = await parseRes.json();
       const d = new Date();
       const hh = String(d.getUTCHours()).padStart(2, "0");
       const mm = String(d.getUTCMinutes()).padStart(2, "0");
@@ -155,6 +152,7 @@ export default function AddTangent({
           time: time,
           data: tangentJson,
           userId: id,
+          url: url,
         });
       } catch (err) {
         console.error("Parsing error:", err);

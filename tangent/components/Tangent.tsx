@@ -14,14 +14,16 @@ import {
 } from "@/components/ui/accordion";
 import { TangentData } from "@/data/tangent";
 import { StringToBoolean } from "class-variance-authority/types";
+import Link from "next/link";
 
 type Props = {
   title: string;
   date: string;
   time: string;
+  url: string;
   data: TangentData;
 };
-export default function Tangent({title, date, time, data}: Props) {
+export default function Tangent({ title, date, time, url, data }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [tangent, changeTangent] = useState(data);
   return (
@@ -31,7 +33,16 @@ export default function Tangent({title, date, time, data}: Props) {
           className="cursor-pointer p-4"
           onClick={() => setExpanded((prev) => !prev)}
         >
-          <CardTitle className="text-center">{title}</CardTitle>
+          <CardTitle className="text-center">
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              {title}
+            </a>
+          </CardTitle>
           <CardDescription className="text-center">
             {date} @ {time}
           </CardDescription>
@@ -44,12 +55,14 @@ export default function Tangent({title, date, time, data}: Props) {
           <CardContent>
             <Accordion type="multiple">
               {tangent.tangent.map((item, num) => {
-                return(
+                return (
                   <AccordionItem key={num} value={`${num}`}>
-                    <AccordionTrigger>{num+1}{". "}{item.title}</AccordionTrigger>
-                    <AccordionContent>
-                      {item.content}
-                    </AccordionContent>
+                    <AccordionTrigger>
+                      {num + 1}
+                      {". "}
+                      {item.title}
+                    </AccordionTrigger>
+                    <AccordionContent>{item.content}</AccordionContent>
                   </AccordionItem>
                 );
               })}
