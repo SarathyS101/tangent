@@ -54,7 +54,6 @@ export default function AddTangent({
     setLoading(true);
 
     try {
-
       console.log("🔗 Requesting signed URL...");
       const res = await fetch("/api/upload", {
         method: "POST",
@@ -98,7 +97,6 @@ export default function AddTangent({
       // console.log("📊 Parsing response:", parseData);
 
       // if (!parseData.success) throw new Error(parseData.error);
-
 
       // 3) Parse PDF on your backend
       // const parseRes = await fetch(
@@ -178,8 +176,8 @@ export default function AddTangent({
     <>
       {!expand ? (
         <div onClick={() => setExpand(true)} className="cursor-pointer">
-          <Card className="w-[150px] h-[150px]">
-            <CardHeader>
+          <Card className="w-[250px] h-[250px] flex items-center justify-center">
+            <CardHeader className="flex flex-col items-center">
               <CardTitle className="text-center">Add a New Tangent</CardTitle>
               <CardDescription className="text-center">
                 <Plus size={48} className="inline-block" color="black" />

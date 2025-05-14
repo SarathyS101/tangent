@@ -1,4 +1,4 @@
-// app/view-tangents/page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -26,11 +26,11 @@ export default function ViewTangentsPage() {
   }, [router]);
 
   if (loading) return <p>Loading...</p>;
-  if (!user)    return null; // already redirecting
+  if (!user)    return null; 
 
   return (
     <div className="p-4">
-      <Navbar name={user.displayName}/>
+      <Navbar user={user}/>
       <TangentList />
     </div>
   );

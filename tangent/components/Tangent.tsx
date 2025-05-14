@@ -28,7 +28,7 @@ export default function Tangent({ title, date, time, url, data }: Props) {
   const [tangent, changeTangent] = useState(data);
   return (
     <>
-      <Card className="w-[350px] transition-all duration-300">
+      <Card className={`w-[350px] ${!expanded?"h-[250px]":""} transition-all duration-300`}>
         <div
           className="cursor-pointer p-4"
           onClick={() => setExpanded((prev) => !prev)}
@@ -38,7 +38,7 @@ export default function Tangent({ title, date, time, url, data }: Props) {
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="text-black-600 hover:underline"
             >
               {title}
             </a>

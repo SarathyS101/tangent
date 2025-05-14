@@ -8,23 +8,23 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Menu } from "lucide-react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import  auth  from "@/utils/authorization";
-
-export default function Navbar({ name }: { name: string }) {
-    const router = useRouter();
+import auth from "@/utils/authorization";
+export default function Navbar({ user }: { user: null | {} }) {
+  const router = useRouter();
   return (
     <nav className="bg-white border-b mb-8">
       <div className="container mx-auto flex items-center justify-between p-4">
         <Link href="/" className="text-xl font-bold">
-          Tangent
+          {<i>tan (θ)</i>} 
         </Link>
 
         <div className="hidden md:flex space-x-6">
           <p className="text-gray-600 hover:text-gray-900">
-            Prepare to Tangent, {name.split(" ")[0]}!
+            Prepare to Tangent, {user?.displayName.split(" ")[0]}!
           </p>
         </div>
 
@@ -34,8 +34,13 @@ export default function Navbar({ name }: { name: string }) {
             onClick={() => {
               signOut(auth).then(() => router.replace("/"));
             }}
+            className="py-6"
           >
-            Sign Out
+            <Avatar>
+              <AvatarImage src={user?.photoURL} />
+              <AvatarFallback>{user?.displayName ? user.displayName[0] : "?"}</AvatarFallback>
+            </Avatar>
+           {"Sign Out"}
           </Button>
         </div>
 

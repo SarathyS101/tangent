@@ -77,7 +77,7 @@ export default function TangentList() {
   //   if (tangents.length === 0) return <p>No tangents found.</p>;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start items-center justify-items-center">
       {uid!=null && <AddTangent id={uid} deployed={deployed} setDeployed={setDeployed} />}
       {tangents.map(({ id, title, date, time, url, data }) => (
         <Tangent key={id} url ={url} title={title} date={date} time={time} data={data} />
