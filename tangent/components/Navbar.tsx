@@ -13,19 +13,18 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import  auth  from "@/utils/authorization";
 
-export default function Navbar() {
+export default function Navbar({ name }: { name: string }) {
     const router = useRouter();
   return (
-    <nav className="bg-white border-b">
+    <nav className="bg-white border-b mb-8">
       <div className="container mx-auto flex items-center justify-between p-4">
-        {/* Logo */}
         <Link href="/" className="text-xl font-bold">
           Tangent
         </Link>
 
         <div className="hidden md:flex space-x-6">
           <p className="text-gray-600 hover:text-gray-900">
-            Prepare to Tangent
+            Prepare to Tangent, {name.split(" ")[0]}!
           </p>
         </div>
 

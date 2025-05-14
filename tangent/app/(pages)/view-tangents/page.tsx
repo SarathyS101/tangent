@@ -10,7 +10,7 @@ import Navbar from "@/components/Navbar";
 
 export default function ViewTangentsPage() {
   const [loading, setLoading] = useState(true);
-  const [user, setUser]    = useState<null | {}>(null);
+  const [user, setUser] = useState<null | {}>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function ViewTangentsPage() {
 
   return (
     <div className="p-4">
-      <Navbar />
+      <Navbar name={user.displayName}/>
       <TangentList />
     </div>
   );

@@ -1,17 +1,5 @@
-// import AddTangent from "@/components/AddTangent";
-// import Tangent from "@/components/Tangent"
-// import Login from "@/components/Login";
-
-// export default function Home() {
-//   return (
-//     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-//       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-//         <Login />
-//       </main>
-//     </div>
-//   );
-// }
 import { GalleryVerticalEnd } from "lucide-react"
+
 import { LoginForm } from "@/components/ui/login-form"
 
 export default function LoginPage() {
@@ -20,10 +8,10 @@ export default function LoginPage() {
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <a href="#" className="flex items-center gap-2 font-medium">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
               <GalleryVerticalEnd className="size-4" />
             </div>
-            Tangent
+            Acme Inc.
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -32,7 +20,7 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <div className="relative hidden bg-muted lg:block">
+      <div className="bg-muted relative hidden lg:block">
         <img
           src="/placeholder.svg"
           alt="Image"
